@@ -5,7 +5,7 @@
 class MyString
 {
 	char * m_pStr;
-	static char * m_pDefaultpStr;
+	static char m_pDefaultpStr[];
 
 public:
 
@@ -18,10 +18,10 @@ public:
 	MyString& operator=(MyString && str);
 
 	/*MyString operator+(const MyString & str);*/
-	bool operator>(const MyString & right);
-	bool operator<(const MyString & right);
-	bool operator>=(const MyString & right);
-	bool operator<=(const MyString & right);
+	bool operator>(const MyString & right) const;
+	bool operator<(const MyString & right) const;
+	bool operator>=(const MyString & right) const;
+	bool operator<=(const MyString & right) const;
 
 	friend std::ostream& operator<<(std::ostream& MYCOUT, const MyString& MYSTR);
 

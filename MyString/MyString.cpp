@@ -1,6 +1,5 @@
 ﻿#include "MyString.h"
-char * MyString::m_pDefaultpStr = new char('\0'); //стоит так делать? ПРОВЕРКА ТЕСТ ПРОВЕРКА ТЕСТ
-
+char MyString::m_pDefaultpStr[] = {""}; //изменение
 
 MyString::MyString()
 {
@@ -9,7 +8,7 @@ MyString::MyString()
 
 MyString::~MyString()
 {
-	if (m_pStr != m_pDefaultpStr) //надо?
+	if (m_pStr != m_pDefaultpStr) 
 	{
 		delete[] m_pStr;
 	}
@@ -33,7 +32,7 @@ MyString::MyString(const char * initStr)
 
 MyString::MyString(const MyString & str)
 {
-	if (&str != nullptr)
+	if (str.m_pStr != m_pDefaultpStr)
 	{
 		size_t length = strlen(str.m_pStr) + 1;
 
@@ -43,23 +42,20 @@ MyString::MyString(const MyString & str)
 	}
 	else
 	{
-		m_pStr = m_pDefaultpStr; //это не нужно по идее
+		m_pStr = m_pDefaultpStr; 
 	}
 }
 
 MyString::MyString(MyString && str)
 {
-	if (&str != nullptr && str.m_pStr != m_pDefaultpStr)
-	{
-		m_pStr = str.m_pStr; // твое - наше
+	m_pStr = str.m_pStr; // твое - наше
 
-		str.m_pStr = str.m_pDefaultpStr; // а у тебя теперь default
-	}
+	str.m_pStr = str.m_pDefaultpStr; // а у тебя теперь default
 }
 
 MyString & MyString::operator=(const char * initStr)
 {
-	if (initStr != nullptr)
+	if (initStr != nullptr && *initStr != 0)
 	{
 		if (m_pStr != m_pDefaultpStr)
 		{
@@ -74,7 +70,7 @@ MyString & MyString::operator=(const char * initStr)
 	}
 	else
 	{
-		m_pStr = m_pDefaultpStr; //надо ведь?
+		m_pStr = m_pDefaultpStr; 
 	}
 
 	return *this;
@@ -82,19 +78,25 @@ MyString & MyString::operator=(const char * initStr)
 
 MyString & MyString::operator=(const MyString & str)
 {
-	if (str.m_pStr != str.m_pDefaultpStr)
+	if (&str != this)
 	{
-		delete[] m_pStr;
+		if (m_pStr != m_pDefaultpStr)
+		{
+			delete[] m_pStr;
+		}
 
-		size_t length = strlen(str.m_pStr) + 1;
+		if (str.m_pStr != str.m_pDefaultpStr)
+		{
+			size_t length = strlen(str.m_pStr) + 1;
 
-		m_pStr = new char[length];
+			m_pStr = new char[length];
 
-		strcpy(m_pStr, str.m_pStr);
-	}
-	else
-	{
-		m_pStr = m_pDefaultpStr; //надо ведь?
+			strcpy(m_pStr, str.m_pStr);
+		}
+		else
+		{
+			m_pStr = m_pDefaultpStr;
+		}
 	}
 
 	return *this;
@@ -102,46 +104,92 @@ MyString & MyString::operator=(const MyString & str)
 
 MyString & MyString::operator=(MyString && str)
 {
-	if (str.m_pStr != nullptr && str.m_pStr != str.m_pDefaultpStr)
+	if (&str != this)
 	{
-		delete[] m_pStr;
+		if (m_pStr != m_pDefaultpStr)
+		{
+			delete[] m_pStr;
+		}
 		m_pStr = str.m_pStr;
-		str.m_pStr = str.m_pDefaultpStr;
+		str.m_pStr = str.m_pDefaultpStr;		
 	}
 
 	return *this;
 }
 
-bool MyString::operator>(const MyString & right)
+// example
+
+//bool MyString::operator>(const MyString & right) const
+//{
+//	for (size_t i = 0; i <= strlen(m_pStr); )
+//	{
+//		if (static_cast<unsigned char>(m_pStr[i]) < static_cast<unsigned char>(right.m_pStr[i]))
+//		{
+//			return true;
+//		}
+//		else if (static_cast<unsigned char>(m_pStr[i]) == static_cast<unsigned char>(right.m_pStr[i]))
+//		{
+//			++i;
+//		}
+//		else
+//		{
+//			return false;
+//		}
+//	}
+//
+//	return true;	
+//}
+
+//another one
+
+//bool MyString::operator>(const MyString & right) const
+//{
+//	for (size_t i = 0; i <= strlen(m_pStr); )
+//	{
+//		int result = static_cast<unsigned char>(m_pStr[i]) - static_cast<unsigned char>(right.m_pStr[i]);
+//		if (result < 0)
+//		{
+//			return true;
+//		}
+//		else if (result == 0)
+//		{
+//			++i;
+//		}
+//		else
+//		{
+//			return false;
+//		}
+//	}
+//
+//	return true;
+//}
+
+// last
+
+bool MyString::operator>(const MyString & right) const
 {
-	for (size_t i = 0; i <= strlen(m_pStr); )
+	char * my_m_pStr = m_pStr;
+	char * right_m_pStr = right.m_pStr;
+
+	while (*my_m_pStr == *right_m_pStr && *my_m_pStr != NULL)
 	{
-		if (static_cast<int>(m_pStr[i]) < static_cast<int>(right.m_pStr[i]))
-		{
-			return true;
-		}
-		else if (static_cast<int>(m_pStr[i]) == static_cast<int>(right.m_pStr[i]))
-		{
-			++i;
-		}
-		else
-		{
-			return false;
-		}
+		++my_m_pStr;
+		++right_m_pStr;
 	}
 
-	return true;	
+	return (*my_m_pStr - *right_m_pStr) < 0;
 }
 
-bool MyString::operator<(const MyString & right)
+
+bool MyString::operator<(const MyString & right) const
 {
 	for (size_t i = 0; i <= strlen(m_pStr); )
 	{
-		if (static_cast<int>(m_pStr[i]) < static_cast<int>(right.m_pStr[i]))
+		if (static_cast<unsigned char>(m_pStr[i]) < static_cast<unsigned char>(right.m_pStr[i]))
 		{
 			return false;
 		}
-		else if (static_cast<int>(m_pStr[i]) == static_cast<int>(right.m_pStr[i]))
+		else if (static_cast<unsigned char>(m_pStr[i]) == static_cast<unsigned char>(right.m_pStr[i]))
 		{
 			++i;
 		}
@@ -157,15 +205,15 @@ bool MyString::operator<(const MyString & right)
 	}
 }
 
-bool MyString::operator>=(const MyString & right)
+bool MyString::operator>=(const MyString & right) const
 {
 	for (size_t i = 0; i <= strlen(m_pStr); )
 	{
-		if (static_cast<int>(m_pStr[i]) < static_cast<int>(right.m_pStr[i]))
+		if (static_cast<unsigned char>(m_pStr[i]) < static_cast<unsigned char>(right.m_pStr[i]))
 		{
 			return true;
 		}
-		else if (static_cast<int>(m_pStr[i]) == static_cast<int>(right.m_pStr[i]))
+		else if (static_cast<unsigned char>(m_pStr[i]) == static_cast<unsigned char>(right.m_pStr[i]))
 		{
 			++i;
 		}
@@ -179,7 +227,7 @@ bool MyString::operator>=(const MyString & right)
 	//вроде strcmp можно так сделать
 }
 
-bool MyString::operator<=(const MyString & right)
+bool MyString::operator<=(const MyString & right) const
 {
 	for (size_t i = 0; i <= strlen(m_pStr); )
 	{
