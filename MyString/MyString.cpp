@@ -1,5 +1,5 @@
-#include "MyString.h"
-char * MyString::m_pDefaultpStr = new char('\0'); //стоит так делать?
+п»ї#include "MyString.h"
+char * MyString::m_pDefaultpStr = new char('\0'); //СЃС‚РѕРёС‚ С‚Р°Рє РґРµР»Р°С‚СЊ? РџР РћР’Р•Р РљРђ РўР•РЎРў РџР РћР’Р•Р РљРђ РўР•РЎРў
 
 
 MyString::MyString()
@@ -9,7 +9,7 @@ MyString::MyString()
 
 MyString::~MyString()
 {
-	if (m_pStr != m_pDefaultpStr) //надо?
+	if (m_pStr != m_pDefaultpStr) //РЅР°РґРѕ?
 	{
 		delete[] m_pStr;
 	}
@@ -43,7 +43,7 @@ MyString::MyString(const MyString & str)
 	}
 	else
 	{
-		m_pStr = m_pDefaultpStr; //это не нужно по идее
+		m_pStr = m_pDefaultpStr; //СЌС‚Рѕ РЅРµ РЅСѓР¶РЅРѕ РїРѕ РёРґРµРµ
 	}
 }
 
@@ -51,9 +51,9 @@ MyString::MyString(MyString && str)
 {
 	if (&str != nullptr && str.m_pStr != m_pDefaultpStr)
 	{
-		m_pStr = str.m_pStr; // твое - наше
+		m_pStr = str.m_pStr; // С‚РІРѕРµ - РЅР°С€Рµ
 
-		str.m_pStr = str.m_pDefaultpStr; // а у тебя теперь default
+		str.m_pStr = str.m_pDefaultpStr; // Р° Сѓ С‚РµР±СЏ С‚РµРїРµСЂСЊ default
 	}
 }
 
@@ -74,7 +74,7 @@ MyString & MyString::operator=(const char * initStr)
 	}
 	else
 	{
-		m_pStr = m_pDefaultpStr; //надо ведь?
+		m_pStr = m_pDefaultpStr; //РЅР°РґРѕ РІРµРґСЊ?
 	}
 
 	return *this;
@@ -94,7 +94,7 @@ MyString & MyString::operator=(const MyString & str)
 	}
 	else
 	{
-		m_pStr = m_pDefaultpStr; //надо ведь?
+		m_pStr = m_pDefaultpStr; //РЅР°РґРѕ РІРµРґСЊ?
 	}
 
 	return *this;
@@ -176,7 +176,7 @@ bool MyString::operator>=(const MyString & right)
 	}
 	return true;	
 
-	//вроде strcmp можно так сделать
+	//РІСЂРѕРґРµ strcmp РјРѕР¶РЅРѕ С‚Р°Рє СЃРґРµР»Р°С‚СЊ
 }
 
 bool MyString::operator<=(const MyString & right)
@@ -199,7 +199,7 @@ bool MyString::operator<=(const MyString & right)
 	return true;
 }
 
-//MyString MyString::operator+(const MyString & str) //поплыл
+//MyString MyString::operator+(const MyString & str) //РїРѕРїР»С‹Р»
 //{
 //	size_t leftlength = 0;
 //	size_t rigthlength = 0;
